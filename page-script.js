@@ -28,8 +28,6 @@
 
   // 認証情報を保持
   let authHeaders = null;
-  // カテゴリAPIのベースURL
-  let categoryApiBaseUrl = null;
 
   // オリジナルのfetchを保存
   const originalFetch = window.fetch;
@@ -60,11 +58,8 @@
           'uid': response.headers.get('uid')
         };
 
-        // POSTリクエストのURLをベースURLとして保存
-        categoryApiBaseUrl = url;
         console.log('[オンクラスエンハンサー] レスポンス:', data);
         console.log('[オンクラスエンハンサー] 認証ヘッダー:', authHeaders);
-        console.log('[オンクラスエンハンサー] APIベースURL:', categoryApiBaseUrl);
 
         // レスポンス形式: {data: {id: ...}} または {id: ...}
         const categoryId = data?.data?.id || data?.id;
@@ -120,13 +115,9 @@
             'uid': xhr.getResponseHeader('uid')
           };
 
-          // POSTリクエストのURLをベースURLとして保存
-          categoryApiBaseUrl = url;
-
           // レスポンスから作成されたカテゴリIDを取得
           const response = JSON.parse(xhr.responseText);
           console.log('[オンクラスエンハンサー] レスポンス:', response);
-          console.log('[オンクラスエンハンサー] APIベースURL:', categoryApiBaseUrl);
 
           // レスポンス形式: {data: {id: ...}} または {id: ...}
           const categoryId = response?.data?.id || response?.id;
@@ -155,13 +146,8 @@
       return;
     }
 
-    if (!categoryApiBaseUrl) {
-      notifyError('APIのベースURLが取得できませんでした');
-      return;
-    }
-
-    // POSTしたURLに /{categoryId} を追加してPATCH
-    const patchUrl = `${categoryApiBaseUrl}/${categoryId}`;
+    // 順序変更API: /v1/enterprise_manager/course_categories/{category_id}/position
+    const patchUrl = `https://api.the-online-class.com/v1/enterprise_manager/course_categories/${categoryId}/position`;
     console.log('[オンクラスエンハンサー] PATCH URL:', patchUrl);
 
     try {
@@ -174,9 +160,7 @@
           'uid': authHeaders['uid']
         },
         body: JSON.stringify({
-          course_category: {
-            row_order_position: 0
-          }
+          row_order_position: 0
         })
       });
 
