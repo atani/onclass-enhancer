@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>プライバシーポリシー - オンクラスエンハンサー</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Hiragino Sans', sans-serif;
+      line-height: 1.8;
+      color: #333;
+      background: #f8fafc;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    h1 {
+      font-size: 28px;
+      color: #1e293b;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      color: #64748b;
+      font-size: 14px;
+    }
+    .update-date {
+      color: #94a3b8;
+      font-size: 13px;
+      margin-top: 8px;
+    }
+    main {
+      background: white;
+      border-radius: 12px;
+      padding: 32px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    h2 {
+      font-size: 20px;
+      color: #1e293b;
+      margin-top: 32px;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #4F46E5;
+    }
+    h2:first-child {
+      margin-top: 0;
+    }
+    p {
+      margin-bottom: 16px;
+      color: #475569;
+    }
+    ul {
+      margin-bottom: 16px;
+      padding-left: 24px;
+    }
+    li {
+      margin-bottom: 8px;
+      color: #475569;
+    }
+    strong {
+      color: #1e293b;
+    }
+    a {
+      color: #4F46E5;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #e2e8f0;
+      color: #94a3b8;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>プライバシーポリシー</h1>
+      <p class="subtitle">オンクラスエンハンサー</p>
+      <p class="update-date">最終更新日: 2025年1月17日</p>
+    </header>
+
+    <main>
+      <h2>はじめに</h2>
+      <p>オンクラスエンハンサー（以下「本拡張機能」）は、ユーザーのプライバシーを尊重し、個人情報の保護に努めています。本プライバシーポリシーでは、本拡張機能がどのような情報を収集し、どのように使用するかについて説明します。</p>
+
+      <h2>収集する情報</h2>
+      <p><strong>本拡張機能は、ユーザーの個人情報を一切収集しません。</strong></p>
+      <p>本拡張機能は以下の情報をローカルでのみ処理します：</p>
+      <ul>
+        <li><strong>設定情報</strong>: カテゴリ自動移動機能のON/OFF設定は、Chrome の storage.sync API を使用してユーザーのブラウザにのみ保存されます。</li>
+        <li><strong>感想データ</strong>: エクスポート機能で取得した感想データは、ユーザーのローカルデバイスにファイルとして保存されるのみで、外部サーバーには送信されません。</li>
+      </ul>
+
+      <h2>情報の使用</h2>
+      <p>本拡張機能が処理する情報は、以下の目的でのみ使用されます：</p>
+      <ul>
+        <li>カテゴリ自動移動機能の有効/無効の切り替え</li>
+        <li>感想データのエクスポート（JSON/CSV形式）</li>
+      </ul>
+
+      <h2>情報の共有</h2>
+      <p>本拡張機能は、いかなる情報も第三者と共有しません。すべてのデータ処理はユーザーのブラウザ内でローカルに行われます。</p>
+
+      <h2>外部との通信</h2>
+      <p>本拡張機能は、オンクラス（the-online-class.com）のウェブサイトとのみ通信します。これは以下の機能を実現するために必要です：</p>
+      <ul>
+        <li>カテゴリ作成時の自動移動（オンクラスAPIへのリクエスト）</li>
+        <li>感想データの取得（オンクラス管理画面からのデータ抽出）</li>
+      </ul>
+      <p>本拡張機能は、開発者のサーバーを含む他のいかなる外部サービスとも通信しません。</p>
+
+      <h2>データの保存</h2>
+      <ul>
+        <li>設定データはChrome の同期ストレージに保存され、同じGoogleアカウントでログインした他のデバイスと同期される場合があります。</li>
+        <li>エクスポートされたファイルはユーザーが指定した場所に保存されます。</li>
+      </ul>
+
+      <h2>お問い合わせ</h2>
+      <p>本プライバシーポリシーに関するご質問がある場合は、GitHubリポジトリのIssueでお問い合わせください。</p>
+      <p><a href="https://github.com/atani/onclass-enhancer/issues" target="_blank">https://github.com/atani/onclass-enhancer/issues</a></p>
+
+      <h2>変更について</h2>
+      <p>本プライバシーポリシーは、必要に応じて更新される場合があります。重要な変更がある場合は、拡張機能のアップデートを通じてお知らせします。</p>
+    </main>
+
+    <footer>
+      <p>&copy; 2025 オンクラスエンハンサー</p>
+    </footer>
+  </div>
+</body>
+</html>
