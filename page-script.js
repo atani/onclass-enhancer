@@ -2,8 +2,6 @@
 // fetch/XMLHttpRequestをプロキシしてAPI通信を監視し、カテゴリ作成時に自動で先頭に移動
 
 (function() {
-  console.log('[オンクラスエンハンサー] page-script.js 開始');
-
   // 設定を取得
   const scriptElement = document.currentScript;
   let settings = { autoCategoryMove: false };
@@ -11,7 +9,6 @@
   if (scriptElement && scriptElement.dataset.settings) {
     try {
       settings = JSON.parse(scriptElement.dataset.settings);
-      console.log('[オンクラスエンハンサー] 設定読み込み:', settings);
     } catch (e) {
       console.error('[オンクラスエンハンサー] 設定のパースに失敗:', e);
     }
@@ -22,7 +19,6 @@
     if (event.source !== window) return;
     if (event.data.type === 'ONCLASS_ENHANCER_SETTINGS_CHANGED') {
       settings = { ...settings, ...event.data.settings };
-      console.log('[オンクラスエンハンサー] 設定変更:', settings);
     }
   });
 
@@ -44,8 +40,6 @@
         method.toUpperCase() === 'POST' &&
         url.includes('/course_categories')) {
 
-      console.log('[オンクラスエンハンサー] カテゴリ作成API検知 (fetch):', url);
-
       try {
         // レスポンスをクローンして読み取り
         const clonedResponse = response.clone();
@@ -57,9 +51,6 @@
           'client': response.headers.get('client'),
           'uid': response.headers.get('uid')
         };
-
-        console.log('[オンクラスエンハンサー] レスポンス:', data);
-        console.log('[オンクラスエンハンサー] 認証ヘッダー:', authHeaders);
 
         // レスポンス形式: {data: {id: ...}} または {id: ...}
         const categoryId = data?.data?.id || data?.id;
@@ -105,8 +96,6 @@
           method.toUpperCase() === 'POST' &&
           url.includes('/course_categories')) {
 
-        console.log('[オンクラスエンハンサー] カテゴリ作成API検知 (XHR):', url);
-
         try {
           // レスポンスヘッダーから認証情報を取得
           authHeaders = {
@@ -117,7 +106,6 @@
 
           // レスポンスから作成されたカテゴリIDを取得
           const response = JSON.parse(xhr.responseText);
-          console.log('[オンクラスエンハンサー] レスポンス:', response);
 
           // レスポンス形式: {data: {id: ...}} または {id: ...}
           const categoryId = response?.data?.id || response?.id;
@@ -137,8 +125,6 @@
   // プロトタイプをコピー
   window.XMLHttpRequest.prototype = OriginalXHR.prototype;
 
-  console.log('[オンクラスエンハンサー] fetch/XHR プロキシ設定完了');
-
   // カテゴリを先頭に移動
   async function moveCategoryToTop(categoryId) {
     if (!authHeaders || !authHeaders['access-token']) {
@@ -148,7 +134,6 @@
 
     // 順序変更API: /v1/enterprise_manager/course_categories/{category_id}/position
     const patchUrl = `https://api.the-online-class.com/v1/enterprise_manager/course_categories/${categoryId}/position`;
-    console.log('[オンクラスエンハンサー] PATCH URL:', patchUrl);
 
     try {
       const response = await fetch(patchUrl, {

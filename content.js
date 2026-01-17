@@ -315,5 +315,4 @@
     URL.revokeObjectURL(url);
   }
 
-  console.log('オンクラスエンハンサー: 感想エクスポート機能 初期化完了');
 })();
