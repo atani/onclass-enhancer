@@ -1,7 +1,9 @@
 // ページコンテキストで実行されるスクリプト
-// XMLHttpRequestをプロキシしてAPI通信を監視し、カテゴリ作成時に自動で先頭に移動
+// fetch/XMLHttpRequestをプロキシしてAPI通信を監視し、カテゴリ作成時に自動で先頭に移動
 
 (function() {
+  console.log('[オンクラスエンハンサー] page-script.js 開始');
+
   // 設定を取得
   const scriptElement = document.currentScript;
   let settings = { autoCategoryMove: false };
@@ -9,6 +11,7 @@
   if (scriptElement && scriptElement.dataset.settings) {
     try {
       settings = JSON.parse(scriptElement.dataset.settings);
+      console.log('[オンクラスエンハンサー] 設定読み込み:', settings);
     } catch (e) {
       console.error('[オンクラスエンハンサー] 設定のパースに失敗:', e);
     }
@@ -19,11 +22,56 @@
     if (event.source !== window) return;
     if (event.data.type === 'ONCLASS_ENHANCER_SETTINGS_CHANGED') {
       settings = { ...settings, ...event.data.settings };
+      console.log('[オンクラスエンハンサー] 設定変更:', settings);
     }
   });
 
   // 認証情報を保持
   let authHeaders = null;
+
+  // オリジナルのfetchを保存
+  const originalFetch = window.fetch;
+
+  // fetchをプロキシ
+  window.fetch = async function(input, init) {
+    const url = typeof input === 'string' ? input : input.url;
+    const method = init?.method || 'GET';
+
+    const response = await originalFetch.apply(this, arguments);
+
+    // カテゴリ作成APIへのPOSTを検知
+    if (settings.autoCategoryMove &&
+        method.toUpperCase() === 'POST' &&
+        url.includes('/course_categories')) {
+
+      console.log('[オンクラスエンハンサー] カテゴリ作成API検知 (fetch):', url);
+
+      try {
+        // レスポンスをクローンして読み取り
+        const clonedResponse = response.clone();
+        const data = await clonedResponse.json();
+
+        // レスポンスヘッダーから認証情報を取得
+        authHeaders = {
+          'access-token': response.headers.get('access-token'),
+          'client': response.headers.get('client'),
+          'uid': response.headers.get('uid')
+        };
+
+        console.log('[オンクラスエンハンサー] レスポンス:', data);
+        console.log('[オンクラスエンハンサー] 認証ヘッダー:', authHeaders);
+
+        if (data && data.id) {
+          moveCategoryToTop(data.id);
+        }
+      } catch (e) {
+        console.error('[オンクラスエンハンサー] レスポンスの解析に失敗:', e);
+        notifyError('レスポンスの解析に失敗しました');
+      }
+    }
+
+    return response;
+  };
 
   // オリジナルのXMLHttpRequestを保存
   const OriginalXHR = window.XMLHttpRequest;
@@ -55,6 +103,8 @@
           method.toUpperCase() === 'POST' &&
           url.includes('/course_categories')) {
 
+        console.log('[オンクラスエンハンサー] カテゴリ作成API検知 (XHR):', url);
+
         try {
           // レスポンスヘッダーから認証情報を取得
           authHeaders = {
@@ -65,6 +115,8 @@
 
           // レスポンスから作成されたカテゴリIDを取得
           const response = JSON.parse(xhr.responseText);
+          console.log('[オンクラスエンハンサー] レスポンス:', response);
+
           if (response && response.id) {
             moveCategoryToTop(response.id);
           }
@@ -80,6 +132,8 @@
 
   // プロトタイプをコピー
   window.XMLHttpRequest.prototype = OriginalXHR.prototype;
+
+  console.log('[オンクラスエンハンサー] fetch/XHR プロキシ設定完了');
 
   // カテゴリを先頭に移動
   async function moveCategoryToTop(categoryId) {

@@ -1,17 +1,26 @@
 // Content Script: ページスクリプトの注入と設定管理
 
 (async function() {
+  console.log('[オンクラスエンハンサー] injector.js 開始');
+
   // 設定を取得
   const settings = await chrome.storage.sync.get({
     autoCategoryMove: false
   });
+  console.log('[オンクラスエンハンサー] 設定:', settings);
 
   // ページスクリプトを注入
   const script = document.createElement('script');
   script.src = chrome.runtime.getURL('page-script.js');
   script.dataset.settings = JSON.stringify(settings);
   (document.head || document.documentElement).appendChild(script);
-  script.onload = () => script.remove();
+  script.onload = () => {
+    console.log('[オンクラスエンハンサー] page-script.js 注入完了');
+    script.remove();
+  };
+  script.onerror = (e) => {
+    console.error('[オンクラスエンハンサー] page-script.js 注入失敗:', e);
+  };
 
   // ページスクリプトからのメッセージを受信
   window.addEventListener('message', (event) => {
