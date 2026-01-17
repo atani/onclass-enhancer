@@ -10,8 +10,8 @@
   window.__onclassEnhancerInjected = true;
 
   let isExporting = false;
+  let cancelRequested = false;
   let allFeedbacks = [];
-  let currentDateFilter = { start: null, end: null };
 
   // メッセージリスナー
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -28,9 +28,11 @@
         }
       });
     } else if (request.action === 'exportAllPages') {
-      currentDateFilter = request.dateFilter || { start: null, end: null };
       exportAllPages();
       sendResponse({ started: true });
+    } else if (request.action === 'cancelExport') {
+      cancelRequested = true;
+      sendResponse({ cancelled: true });
     }
     return true;
   });
@@ -179,13 +181,8 @@
 
     const totalPages = getTotalPages();
 
-    let dateRangeText = '';
-    if (currentDateFilter.start || currentDateFilter.end) {
-      dateRangeText = `\n期間: ${currentDateFilter.start || '指定なし'} 〜 ${currentDateFilter.end || '指定なし'}`;
-    }
-
     const confirmed = confirm(
-      `全${totalPages}ページの感想を取得します。${dateRangeText}\n` +
+      `全${totalPages}ページの感想を取得します。\n` +
       `これには数分かかる場合があります。\n\n` +
       `続行しますか？`
     );
@@ -193,6 +190,7 @@
     if (!confirmed) return;
 
     isExporting = true;
+    cancelRequested = false;
     allFeedbacks = [];
 
     const progressDiv = createProgressUI();
@@ -206,26 +204,31 @@
       }
 
       for (let page = 1; page <= totalPages; page++) {
+        // 中断チェック
+        if (cancelRequested) {
+          progressDiv.innerHTML = `
+            <div style="color: #dc2626; font-weight: bold;">
+              ⏹ 中断しました（${allFeedbacks.length}件取得済み）
+            </div>
+          `;
+          setTimeout(() => progressDiv.remove(), 3000);
+          return;
+        }
+
         updateProgress(progressDiv, page, totalPages);
 
         await waitForPageLoad();
 
-        let pageFeedbacks = extractCurrentPageFeedbacks();
-
-        // 日付フィルタリング
-        pageFeedbacks = filterByDate(pageFeedbacks, currentDateFilter);
+        const pageFeedbacks = extractCurrentPageFeedbacks();
 
         pageFeedbacks.forEach((f, i) => {
           f.id = allFeedbacks.length + i + 1;
         });
         allFeedbacks.push(...pageFeedbacks);
 
-        console.log(`Page ${page}/${totalPages}: ${pageFeedbacks.length} feedbacks (filtered)`);
-
         if (page < totalPages) {
           const hasNext = goToNextPage();
           if (!hasNext) {
-            console.log('No more pages');
             break;
           }
           await new Promise(r => setTimeout(r, 500));
@@ -274,17 +277,10 @@
 
   function updateProgress(div, current, total) {
     const percent = Math.round((current / total) * 100);
-    let dateInfo = '';
-    if (currentDateFilter.start || currentDateFilter.end) {
-      dateInfo = `<div style="color: #64748b; font-size: 12px; margin-bottom: 4px;">
-        期間: ${currentDateFilter.start || '指定なし'} 〜 ${currentDateFilter.end || '指定なし'}
-      </div>`;
-    }
     div.innerHTML = `
       <div style="margin-bottom: 8px; font-weight: bold; color: #1e293b;">
         📥 感想をエクスポート中...
       </div>
-      ${dateInfo}
       <div style="margin-bottom: 8px; color: #64748b; font-size: 14px;">
         ページ ${current} / ${total}
       </div>
@@ -301,7 +297,6 @@
     const data = {
       exportedAt: new Date().toISOString(),
       source: window.location.href,
-      dateFilter: currentDateFilter,
       count: feedbacks.length,
       feedbacks: feedbacks
     };

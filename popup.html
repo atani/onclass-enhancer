@@ -371,14 +371,8 @@
             </div>
           </div>
 
-          <div class="card">
-            <label>期間を指定（任意）</label>
-            <div class="date-range">
-              <input type="date" id="startDate" />
-              <span>〜</span>
-              <input type="date" id="endDate" />
-            </div>
-            <div class="hint">空欄の場合は全期間</div>
+          <div class="hint" style="margin-bottom: 12px; line-height: 1.5;">
+            💡 オンクラス画面でコース・カテゴリ・ブロックを絞り込むと、取得が早く終わります
           </div>
 
           <div class="card">
@@ -395,6 +389,10 @@
 
           <button class="btn btn-secondary" id="exportCurrentBtn" disabled>
             📄 このページのみ
+          </button>
+
+          <button class="btn btn-text" id="cancelBtn" style="display: none; color: #dc2626; border-color: #fecaca;">
+            ⏹ 中断する
           </button>
 
           <div class="loading" id="loading">

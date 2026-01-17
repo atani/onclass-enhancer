@@ -10,11 +10,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   const exportAllBtn = document.getElementById('exportAllBtn');
   const exportCurrentBtn = document.getElementById('exportCurrentBtn');
   const exportFormat = document.getElementById('exportFormat');
-  const startDate = document.getElementById('startDate');
-  const endDate = document.getElementById('endDate');
   const loading = document.getElementById('loading');
   const result = document.getElementById('result');
   const helpBtn = document.getElementById('helpBtn');
+  const cancelBtn = document.getElementById('cancelBtn');
 
   // 折りたたみ
   const exportHeader = document.getElementById('exportHeader');
@@ -74,11 +73,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 全ページ一括取得
   exportAllBtn.addEventListener('click', async () => {
-    const dateFilter = getDateFilter();
-
     exportAllBtn.disabled = true;
     exportCurrentBtn.disabled = true;
     loading.style.display = 'block';
+    cancelBtn.style.display = 'block';
     result.style.display = 'none';
 
     try {
@@ -90,8 +88,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       // 全ページ取得を開始
       const response = await chrome.tabs.sendMessage(tab.id, {
-        action: 'exportAllPages',
-        dateFilter: dateFilter
+        action: 'exportAllPages'
       });
 
       if (response?.started) {
@@ -111,8 +108,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // このページのみ
   exportCurrentBtn.addEventListener('click', async () => {
-    const dateFilter = getDateFilter();
-
     exportAllBtn.disabled = true;
     exportCurrentBtn.disabled = true;
     loading.style.display = 'block';
@@ -126,15 +121,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       await new Promise(r => setTimeout(r, 100));
 
       const response = await chrome.tabs.sendMessage(tab.id, {
-        action: 'extractFeedbacks',
-        dateFilter: dateFilter
+        action: 'extractFeedbacks'
       });
-      let feedbacks = response?.feedbacks || [];
-
-      // 日付フィルタリング（クライアント側でも）
-      if (dateFilter.start || dateFilter.end) {
-        feedbacks = filterByDate(feedbacks, dateFilter);
-      }
+      const feedbacks = response?.feedbacks || [];
 
       if (feedbacks.length === 0) {
         showResult('該当する感想データが見つかりませんでした。', true);
@@ -159,6 +148,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 
+  // 中断ボタン
+  cancelBtn.addEventListener('click', async () => {
+    try {
+      await chrome.tabs.sendMessage(tab.id, { action: 'cancelExport' });
+      showResult('エクスポートを中断しました。', true);
+      cancelBtn.style.display = 'none';
+    } catch (error) {
+      console.error('Cancel error:', error);
+    }
+  });
+
   // ヘルプボタン
   helpBtn.addEventListener('click', () => {
     alert(
@@ -166,23 +166,18 @@ document.addEventListener('DOMContentLoaded', async () => {
       '・カテゴリ自動移動: ONにすると、新規作成したカテゴリが自動で先頭に移動します\n\n' +
       '【感想エクスポート】\n' +
       '1. オンクラス管理画面の感想ページを開く\n' +
-      '2. 期間を指定（任意）\n' +
-      '3. 「全ページ一括取得」または「このページのみ」をクリック\n\n' +
+      '2. 「全ページ一括取得」または「このページのみ」をクリック\n\n' +
+      '【高速化のコツ】\n' +
+      '・オンクラス画面でコース・カテゴリ・ブロックを絞り込んでから取得すると早く終わります\n\n' +
       '【全ページ取得について】\n' +
       '・全ページを自動で巡回して取得します\n' +
       '・ページ数が多い場合は数分かかります\n' +
-      '・取得中はブラウザを閉じないでください\n\n' +
+      '・取得中はブラウザを閉じないでください\n' +
+      '・「中断する」ボタンで途中でやめることもできます\n\n' +
       '【サポート】\n' +
       '問題が解決しない場合は開発者にお問い合わせください。'
     );
   });
-
-  function getDateFilter() {
-    return {
-      start: startDate.value || null,
-      end: endDate.value || null
-    };
-  }
 
   function showResult(message, isError = false) {
     result.textContent = message;
@@ -194,7 +189,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const data = {
       exportedAt: new Date().toISOString(),
       source: source,
-      dateFilter: getDateFilter(),
       count: feedbacks.length,
       feedbacks: feedbacks
     };
