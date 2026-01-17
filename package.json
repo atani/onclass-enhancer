@@ -1,0 +1,14 @@
+{
+  "name": "onclass-enhancer",
+  "version": "2.0.0",
+  "description": "オンクラスの機能を拡張するChrome拡張機能",
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  }
+}
