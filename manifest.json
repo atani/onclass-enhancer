@@ -4,13 +4,11 @@
   "version": "1.0.0",
   "description": "オンクラスの機能を拡張します。カテゴリ自動移動、感想エクスポートなど。",
   "permissions": [
-    "activeTab",
     "storage",
     "downloads",
     "scripting"
   ],
   "host_permissions": [
-    "https://the-online-class.com/*",
     "https://manager.the-online-class.com/*",
     "https://api.the-online-class.com/*"
   ],
@@ -25,7 +23,6 @@
   "content_scripts": [
     {
       "matches": [
-        "https://the-online-class.com/*",
         "https://manager.the-online-class.com/*"
       ],
       "js": ["injector.js"],
@@ -36,7 +33,6 @@
     {
       "resources": ["page-script.js"],
       "matches": [
-        "https://the-online-class.com/*",
         "https://manager.the-online-class.com/*"
       ]
     }
