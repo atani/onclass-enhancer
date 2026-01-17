@@ -61,8 +61,10 @@
         console.log('[オンクラスエンハンサー] レスポンス:', data);
         console.log('[オンクラスエンハンサー] 認証ヘッダー:', authHeaders);
 
-        if (data && data.id) {
-          moveCategoryToTop(data.id);
+        // レスポンス形式: {data: {id: ...}} または {id: ...}
+        const categoryId = data?.data?.id || data?.id;
+        if (categoryId) {
+          moveCategoryToTop(categoryId);
         }
       } catch (e) {
         console.error('[オンクラスエンハンサー] レスポンスの解析に失敗:', e);
@@ -117,8 +119,10 @@
           const response = JSON.parse(xhr.responseText);
           console.log('[オンクラスエンハンサー] レスポンス:', response);
 
-          if (response && response.id) {
-            moveCategoryToTop(response.id);
+          // レスポンス形式: {data: {id: ...}} または {id: ...}
+          const categoryId = response?.data?.id || response?.id;
+          if (categoryId) {
+            moveCategoryToTop(categoryId);
           }
         } catch (e) {
           console.error('[オンクラスエンハンサー] レスポンスの解析に失敗:', e);
