@@ -75,6 +75,10 @@ onclass-enhancer/
 └── README.md
 ```
 
+## サポート
+
+[![GitHub Sponsors](https://img.shields.io/badge/Sponsor-%E2%9D%A4-ea4aaa?logo=github)](https://github.com/sponsors/atani)
+
 ## ライセンス
 
 MIT
