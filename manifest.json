@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "オンクラスエンハンサー",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "オンクラスの機能を拡張します。カテゴリ自動移動、感想エクスポートなど。",
   "permissions": [
     "storage",
