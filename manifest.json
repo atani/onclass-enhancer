@@ -1,13 +1,18 @@
 {
   "manifest_version": 3,
   "name": "オンクラスエンハンサー",
-  "version": "1.0.1",
-  "description": "オンクラスの機能を拡張します。カテゴリ自動移動、感想エクスポートなど。",
+  "version": "1.1.0",
+  "description": "オンクラスの機能を拡張します。カテゴリ自動移動、感想エクスポート、コミュニティ通知など。",
   "permissions": [
     "storage",
     "downloads",
-    "scripting"
+    "scripting",
+    "notifications",
+    "alarms"
   ],
+  "background": {
+    "service_worker": "background.js"
+  },
   "host_permissions": [
     "https://manager.the-online-class.com/*",
     "https://api.the-online-class.com/*"
@@ -31,12 +36,16 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["page-script.js"],
+      "resources": ["page-script.js", "community-script.js"],
       "matches": [
         "https://manager.the-online-class.com/*"
       ]
     }
   ],
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
