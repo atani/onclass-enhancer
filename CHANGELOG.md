@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/atani/onclass-enhancer/compare/v1.1.0...v1.1.1) (2026-02-03)
+
+
+### Bug Fixes
+
+* remove unused downloads permission ([#18](https://github.com/atani/onclass-enhancer/issues/18)) ([9706a24](https://github.com/atani/onclass-enhancer/commit/9706a24f1bb19b4137d4614c20c7ea73143b5fb9))
+
 ## [1.1.0](https://github.com/atani/onclass-enhancer/compare/v1.0.1...v1.1.0) (2026-02-01)
 
 
