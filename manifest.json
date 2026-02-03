@@ -5,7 +5,6 @@
   "description": "オンクラスの機能を拡張します。カテゴリ自動移動、感想エクスポート、コミュニティ通知など。",
   "permissions": [
     "storage",
-    "downloads",
     "scripting",
     "notifications",
     "alarms"
