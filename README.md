@@ -20,24 +20,7 @@
 
 ## インストール
 
-1. このリポジトリをクローン
-   ```bash
-   git clone https://github.com/atani/onclass-enhancer.git
-   ```
-
-2. 依存関係をインストール（テスト実行用）
-   ```bash
-   cd onclass-enhancer
-   npm install
-   ```
-
-3. Chromeで `chrome://extensions` を開く
-
-4. 「デベロッパーモード」をONにする
-
-5. 「パッケージ化されていない拡張機能を読み込む」をクリック
-
-6. `onclass-enhancer` ディレクトリを選択
+[Chrome Web Store](https://chromewebstore.google.com/detail/%E3%82%AA%E3%83%B3%E3%82%AF%E3%83%A9%E3%82%B9%E3%82%A8%E3%83%B3%E3%83%8F%E3%83%B3%E3%82%B5%E3%83%BC/clfpdmnjjknciooaakdojmpfbfgcolgn) からインストールできます。
 
 ## 使い方
 
