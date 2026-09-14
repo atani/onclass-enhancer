@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.2.1](https://github.com/atani/onclass-enhancer/compare/onclass-enhancer-v1.2.0...onclass-enhancer-v1.2.1) (2026-09-14)
+
+
+### Dependencies
+
+* bump jest from 30.3.0 to 30.4.2 ([#33](https://github.com/atani/onclass-enhancer/issues/33)) ([583bd9d](https://github.com/atani/onclass-enhancer/commit/583bd9d664f7d09ee5db42d35059ba8cd362639c))
+* bump jest from 30.4.2 to 30.5.0 ([#39](https://github.com/atani/onclass-enhancer/issues/39)) ([e538532](https://github.com/atani/onclass-enhancer/commit/e5385328e8f9249c40d43f9e7902c5b4d5ba806b))
+* bump jest from 30.5.0 to 30.5.1 ([#40](https://github.com/atani/onclass-enhancer/issues/40)) ([135ff5b](https://github.com/atani/onclass-enhancer/commit/135ff5b4879f6a8b563774f9c10ca77d215203d0))
+
 ## [1.2.0](https://github.com/atani/onclass-enhancer/compare/onclass-enhancer-v1.1.1...onclass-enhancer-v1.2.0) (2026-04-08)
 
 
